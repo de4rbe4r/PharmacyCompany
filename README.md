@@ -7,17 +7,17 @@ The application menu is displayed on the main screen. To enter the submenu, pres
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/1.png" width="800"/></div>
 </br>
 Each submenu displays relevant information about the product, pharmacy, storage, batch. Each submenu has the ability to add a new entity and delete an existing one.
-</br>
+</br></br>
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/2.png" width="700"/></div>
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/3.png" width="800"/></div>
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/44.png" width="800"/></div>
 </br>
 Each batch stores information on the quantity of the product in the batch and its location in a specific storage. For the pharmacies submenu, there is an additional option to display a list of products related to this pharmacy and their quantity in all pharmacy warehouses.
-</br>
+</br></br>
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/6.png" width="800"/></div>
 </br>
 When deleting any of the objects, dependent objects are deleted, for example, when deleting a pharmacy with id = 1, all storages associated with this pharmacy are deleted, and all batches associated with the storages being deleted are deleted.
-</br>
+</br></br>
 <div align="center"><img src="https://github.com/de4rbe4r/PharmacyCompany/blob/master/Images/7.png" width="800"/></div>
 
 #### Language and tools:
