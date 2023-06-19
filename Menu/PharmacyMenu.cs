@@ -31,6 +31,7 @@ namespace PharmacyCompany.Menu
                 Console.WriteLine(" -----------------------------------------------------------------------");
                 Console.WriteLine("\n1. Создать аптеку");
                 Console.WriteLine("2. Удалить аптеку");
+                Console.WriteLine("3. Вывести весь список товаров и его количестве в аптеке");
                 Console.WriteLine("\n0. Выход в главное меню");
 
                 key = Console.ReadKey().KeyChar;
@@ -43,6 +44,9 @@ namespace PharmacyCompany.Menu
                         break;
                     case '2':
                         DatabaseServices.DeletePharmacy(Int32.Parse(DeletePharmacy()));
+                        break; 
+                    case '3':
+                        ShowProductsPharmacy();
                         break;
                     case '0':
                         isExit = true;
@@ -67,6 +71,24 @@ namespace PharmacyCompany.Menu
         {
             Console.Write("Введите Id удаляемой аптеки: ");
             return Console.ReadLine();
+        }
+        private static void ShowProductsPharmacy()
+        {
+            Console.Write("Введите Id аптеки: ");
+            int pharmacyId = Int32.Parse(Console.ReadLine());
+            Dictionary<Product,int> productsWithQuantity = DatabaseServices.GetProductsWithQuantityInPharmacy(pharmacyId);
+            Console.WriteLine("    Список товарных наименований в выбранной аптеке");
+            Console.WriteLine(" ---------------------------------------");
+            Console.WriteLine("| Наименование товара\t| Количество\t|");
+            Console.WriteLine(" ---------------------------------------");
+            foreach (var p in productsWithQuantity)
+            {
+                if (p.Value == 0) continue;
+                Console.WriteLine("| " + p.Key.Title + "\t\t| " + p.Value.ToString() + "\t\t|");
+            }
+            Console.WriteLine(" ---------------------------------------");
+            Console.WriteLine("Для продолжения нажмите любую клавишу");
+            Console.ReadKey();
         }
     }
 }

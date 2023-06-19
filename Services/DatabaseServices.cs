@@ -69,6 +69,46 @@ namespace PharmacyCompany.Services
             }
             return products;
         }
+        public static Dictionary<Product, int> GetProductsWithQuantityInPharmacy(int pharmacyId)
+        {
+            List<Storage> storages = GetStorages(0, pharmacyId);
+            List<Product> products = GetProducts();
+            Dictionary<Product, int> productWithQuantity = new Dictionary<Product, int>();
+
+            foreach (Product p in products)
+            {
+                int totalQuantityProduct = 0;
+                foreach (Storage s in storages)
+                {
+                    string query = "SELECT Sum(Quantity) FROM dbo.Batches WHERE StorageId = " + s.Id + " AND ProductId = " + p.Id;
+                    SqlCommand command = new SqlCommand(query, connectionToDb);
+                    try
+                    {
+                        connectionToDb.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+                        while (reader.Read() && !reader.IsDBNull(0))
+                        {
+                            totalQuantityProduct += reader.GetInt32(0);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ошибка :" + ex.Message);
+                        Thread.Sleep(3000);
+                    }
+                    finally
+                    {
+                        if (connectionToDb.State == System.Data.ConnectionState.Open)
+                        {
+                            connectionToDb.Close();
+                        }
+                    }
+                }
+                productWithQuantity.Add(p, totalQuantityProduct);
+            }
+
+            return productWithQuantity;
+        } 
         public static List<Pharmacy> GetPharmacies(int id = 0)
         {
             string query;
@@ -147,11 +187,13 @@ namespace PharmacyCompany.Services
 
             return storages;
         }
-        public static List<Batch> GetBatches(int id = 0)
+        public static List<Batch> GetBatches(int id = 0, int storageId = 0)
         {
             string query;
-            if (id == 0) query = "SELECT * FROM dbo.Batches";
-            else query = "SELECT * FROM dbo.Batches WHERE id = " + id;
+            if (id != 0) query = "SELECT * FROM dbo.Batches WHERE id = " + id;
+            else if (storageId != 0) query = "SELECT * FROM dbo.Batches WHERE StorageId = " + storageId;
+            else query = "SELECT * FROM dbo.Batches";
+
             List<Batch> batches = new List<Batch>();
 
             SqlCommand command = new SqlCommand(query, connectionToDb);
