@@ -108,8 +108,9 @@ namespace PharmacyCompany.Services
         public static List<Storage> GetStorages(int id = 0)
         {
             string query;
-            if (id == 0) query = "SELECT * FROM dbo.Storages";
-            else query = "SELECT * FROM dbo.Storages WHERE id = " + id;
+            if (id != 0) query = "SELECT * FROM dbo.Storages WHERE id = " + id;
+            else if (pharmacyId != 0) query = "SELECT * FROM dbo.Storages WHERE PharmacyId = " + pharmacyId;
+            else query = "SELECT * FROM dbo.Storages";
             List<Storage> storages = new List<Storage>();
 
             SqlCommand command = new SqlCommand(query, connectionToDb);
@@ -228,26 +229,6 @@ namespace PharmacyCompany.Services
                                          "(3, 1, 10), (3, 2, 20), (3, 3, 30), (3, 4, 40), (3, 5, 50), " +
                                          "(4, 1, 10), (4, 2, 20), (4, 3, 30), (4, 4, 40), (4, 5, 50), " +
                                          "(5, 1, 10), (5, 2, 20), (5, 3, 30), (5, 4, 40), (5, 5, 50) ;";
-                                         //"(1, 1, 2, 10), (1, 2, 2, 20), (1, 3, 2, 30), (1, 4, 2, 40), (1, 5, 2, 50), " +
-                                         //"(2, 1, 2, 10), (2, 2, 2, 20), (2, 3, 2, 30), (2, 4, 2, 40), (2, 5, 2, 50), " +
-                                         //"(3, 1, 2, 10), (3, 2, 2, 20), (3, 3, 2, 30), (3, 4, 2, 40), (3, 5, 2, 50), " +
-                                         //"(4, 1, 2, 10), (4, 2, 2, 20), (4, 3, 2, 30), (4, 4, 2, 40), (4, 5, 2, 50), " +
-                                         //"(5, 1, 2, 10), (5, 2, 2, 20), (5, 3, 2, 30), (5, 4, 2, 40), (5, 5, 2, 50), " +
-                                         //"(1, 1, 3, 10), (1, 2, 3, 20), (1, 3, 3, 30), (1, 4, 3, 40), (1, 5, 3, 50), " +
-                                         //"(2, 1, 3, 10), (2, 2, 3, 20), (2, 3, 3, 30), (2, 4, 3, 40), (2, 5, 3, 50), " +
-                                         //"(3, 1, 3, 10), (3, 2, 3, 20), (3, 3, 3, 30), (3, 4, 3, 40), (3, 5, 3, 50), " +
-                                         //"(4, 1, 3, 10), (4, 2, 3, 20), (4, 3, 3, 30), (4, 4, 3, 40), (4, 5, 3, 50), " +
-                                         //"(5, 1, 3, 10), (5, 2, 3, 20), (5, 3, 3, 30), (5, 4, 3, 40), (5, 5, 3, 50), " +
-                                         //"(1, 1, 4, 10), (1, 2, 4, 20), (1, 3, 4, 30), (1, 4, 4, 40), (1, 5, 4, 50), " +
-                                         //"(2, 1, 4, 10), (2, 2, 4, 20), (2, 3, 4, 30), (2, 4, 4, 40), (2, 5, 4, 50), " +
-                                         //"(3, 1, 4, 10), (3, 2, 4, 20), (3, 3, 4, 30), (3, 4, 4, 40), (3, 5, 4, 50), " +
-                                         //"(4, 1, 4, 10), (4, 2, 4, 20), (4, 3, 4, 30), (4, 4, 4, 40), (4, 5, 4, 50), " +
-                                         //"(5, 1, 4, 10), (5, 2, 4, 20), (5, 3, 4, 30), (5, 4, 4, 40), (5, 5, 4, 50), " +
-                                         //"(1, 1, 5, 10), (1, 2, 5, 20), (1, 3, 5, 30), (1, 4, 5, 40), (1, 5, 5, 50), " +
-                                         //"(2, 1, 5, 10), (2, 2, 5, 20), (2, 3, 5, 30), (2, 4, 5, 40), (2, 5, 5, 50), " +
-                                         //"(3, 1, 5, 10), (3, 2, 5, 20), (3, 3, 5, 30), (3, 4, 5, 40), (3, 5, 5, 50), " +
-                                         //"(4, 1, 5, 10), (4, 2, 5, 20), (4, 3, 5, 30), (4, 4, 5, 40), (4, 5, 5, 50), " +
-                                         //"(5, 1, 5, 10), (5, 2, 5, 20), (5, 3, 5, 30), (5, 4, 5, 40), (5, 5, 5, 50) ;";
             string query = queryIsnertProducts + queryIsnertPharmacies + queryIsnertStorages + queryIsnertBatches;
             ExecuteQuery(query, connectionToDb);
         }
@@ -305,6 +286,8 @@ namespace PharmacyCompany.Services
         }
         public static void DeletePharmacy(int id)
         {
+            List<Storage> storages = GetStorages(0,id);
+            foreach (Storage storage in storages) DeleteBatchByStorageId(storage.Id);
             DeleteStorageByPharmacyId(id);
             string query = "DELETE FROM dbo.Pharmacies WHERE Id = " + id + ";";
             ExecuteQuery(query, connectionToDb);
