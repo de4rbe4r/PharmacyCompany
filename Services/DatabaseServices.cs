@@ -105,7 +105,7 @@ namespace PharmacyCompany.Services
             }
             return pharmacies;
         }
-        public static List<Storage> GetStorages(int id = 0)
+        public static List<Storage> GetStorages(int id = 0, int pharmacyId = 0)
         {
             string query;
             if (id != 0) query = "SELECT * FROM dbo.Storages WHERE id = " + id;
